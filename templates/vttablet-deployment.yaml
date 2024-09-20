@@ -1,0 +1,35 @@
+{{- range .Values.keyspace.availabilityZones }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vitess.fullname" $. }}-vttablet-{{ .name }}
+  labels:
+    app: {{ include "vitess.fullname" $. }}-vttablet
+    zone: {{ .name }}
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "vitess.fullname" $. }}-vttablet
+      zone: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "vitess.fullname" $. }}-vttablet
+        zone: {{ .name }}
+    spec:
+      containers:
+        - name: vttablet
+          image: {{ $.Values.vttablet.image.repository }}:{{ $.Values.vttablet.image.tag }}
+          env:
+            - name: TOPOLOGY_CELL
+              value: {{ .name }}
+          resources:
+            limits:
+              memory: {{ $.Values.vttablet.resources.limits.memory }}
+              cpu: {{ $.Values.vttablet.resources.limits.cpu }}
+            requests:
+              memory: {{ $.Values.vttablet.resources.requests.memory }}
+              cpu: {{ $.Values.vttablet.resources.requests.cpu }}
+---
+{{- end }}

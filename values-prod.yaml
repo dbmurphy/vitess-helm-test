@@ -1,0 +1,16 @@
+global:
+  replicas: 5
+  resources:
+    limits:
+      memory: 4096Mi
+      cpu: 4000m
+    requests:
+      memory: 2048Mi
+      cpu: 2000m
+
+  backup:
+    schedule: "0 2 * * 1"  # Weekly backup at 2 AM every Monday
+
+aws:
+  region: us-east-1
+  secretsPath: engineering/prod/vitess/cluster1

@@ -1,0 +1,22 @@
+keyspace:
+  name: ordersdb
+  replicas: 4
+  availabilityZones:
+    - name: us-east-1a
+      replicas: 2
+    - name: us-east-1b
+      replicas: 1
+    - name: us-east-1c
+      replicas: 1
+
+  backup:
+    # Inherits default backup schedule from values-prod.yaml (2 AM every Monday)
+  
+vttablet:
+  resources:
+    limits:
+      memory: 2048Mi
+      cpu: 2000m
+    requests:
+      memory: 1024Mi
+      cpu: 1000m

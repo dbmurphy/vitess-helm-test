@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "vitess.fullname" . }}-backup
+  labels:
+    app: {{ include "vitess.fullname" . }}
+spec:
+  schedule: {{ .Values.keyspace.backup.schedule | default .Values.global.backup.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: vtbackup
+              image: {{ .Values.backup.image.repository }}:{{ .Values.backup.image.tag }}
+              args:
+                - "--backup_keyspace={{ .Values.keyspace.name }}"
+                - "--backup_storage_implementation=s3"
+                - "--backup_storage_bucket={{ .Values.backup.bucket }}"
+          restartPolicy: OnFailure

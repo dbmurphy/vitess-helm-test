@@ -1,0 +1,20 @@
+global:
+  image:
+    repository: vitess/vitess
+    tag: v20.0
+
+  replicas: 3
+  resources:
+    limits:
+      memory: 1024Mi
+      cpu: 1000m
+    requests:
+      memory: 512Mi
+      cpu: 500m
+
+  backup:
+    schedule: "0 2 * * 1"  # Weekly backup at 2 AM every Monday
+
+aws:
+  region: us-west-2
+  secretsPath: engineering/prod/vitess/cluster1

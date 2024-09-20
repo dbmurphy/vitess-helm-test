@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vitess.fullname" . }}-vtgate
+  labels:
+    app: {{ include "vitess.fullname" . }}
+spec:
+  replicas: {{ .Values.vtgate.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "vitess.fullname" . }}-vtgate
+    spec:
+      containers:
+        - name: vtgate
+          image: {{ .Values.vtgate.image.repository }}:{{ .Values.vtgate.image.tag }}
+          args:
+            - "--auth-server-static-file=/vtgate-auth/vtgate-auth.json"
+          volumeMounts:
+            - name: vtgate-auth-config
+              mountPath: /vtgate-auth
+              subPath: vtgate-auth.json
+      volumes:
+        - name: vtgate-auth-config
+          configMap:
+            name: vtgate-auth-config
